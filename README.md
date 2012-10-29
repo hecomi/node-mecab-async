@@ -21,6 +21,7 @@ Asynchronous japanese morphological analyser using MeCab
 		console.log(result);
 	});
 
+結果：
 
 	[ [ 'いつも', '副詞', '一般', '*', '*', '*', '*', 'いつも', 'イツモ', 'イツモ' ],
 	  [ 'ニコニコ', '副詞', '助詞類接続', '*', '*', '*', '*', 'ニコニコ', 'ニコニコ', 'ニコニコ' ],
@@ -45,6 +46,7 @@ Asynchronous japanese morphological analyser using MeCab
 		console.log(result);
 	});
 
+結果：
 
 	[ 'いつも',
 	  'ニコニコ',
