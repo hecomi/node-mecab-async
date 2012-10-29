@@ -13,6 +13,7 @@ Asynchronous japanese morphological analyser using MeCab
 --------------
 以下のようにコールバック経由で解析結果を取得します。
 
+```javascript
 	var MeCab = new require('MeCab')
 	  , mecab = new MeCab()
 	;
@@ -20,6 +21,7 @@ Asynchronous japanese morphological analyser using MeCab
 		if (err) throw err;
 		console.log(result);
 	});
+```
 
 結果：
 
@@ -38,6 +40,7 @@ Asynchronous japanese morphological analyser using MeCab
 
 わかち書きもできます。
 
+```javascript
 	var MeCab = new require('MeCab')
 	  , mecab = new MeCab()
 	;
@@ -45,6 +48,7 @@ Asynchronous japanese morphological analyser using MeCab
 		if (err) throw err;
 		console.log(result);
 	});
+```
 
 結果：
 
