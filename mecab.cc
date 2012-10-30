@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <thread>
 #include <boost/tokenizer.hpp>
 #include <mecab.h>
 #include <node.h>
@@ -11,7 +10,7 @@ using namespace v8;
 using namespace node;
 
 class MeCab_parser;
-mutex m;
+static uv_mutex_t m;
 
 // 非同期処理でやり取りするデータ
 struct MeCab_baton
@@ -80,7 +79,7 @@ private:
 			uv_default_loop(),
 			req,
 			[](uv_work_t* req) {
-				lock_guard<mutex> lk(m);
+				uv_mutex_lock(&m);
 
 				auto data  = static_cast<MeCab_baton*>( req->data );
 				auto _this = data->_this;
@@ -115,6 +114,7 @@ private:
 
 					data->result.push_back(node_result);
 				}
+				uv_mutex_unlock(&m);
 			},
 			[](uv_work_t* req) {
 				auto data  = static_cast<MeCab_baton*>( req->data );
