@@ -157,6 +157,7 @@ private:
 };
 
 void init(Handle<Object> target) {
+	assert( uv_mutex_init(&m) == 0 );
 	MeCab_parser::Init(target);
 }
 
