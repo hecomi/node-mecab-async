@@ -1,0 +1,1 @@
+cmd_Debug/mecab.node := ./gyp-mac-tool flock ./Debug/linker.lock c++ -shared -Wl,-search_paths_first -mmacosx-version-min=10.5 -arch x86_64 -L./Debug -install_name @loader_path/mecab.node  -o Debug/mecab.node Debug/obj.target/mecab/mecab.o -undefined dynamic_lookup -lmecab
