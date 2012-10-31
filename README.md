@@ -65,6 +65,8 @@ Asynchronous japanese morphological analyser using MeCab
 	  'です',
 	  '！' ]
 
+同期版として parseSync および wakachiSync を使用することもできます。
+
 詳細
 --------------
 その他詳細は Twitter:@hecomi へご質問いただくか、http://d.hatena.ne.jp/hecomi/ をご参照下さい。

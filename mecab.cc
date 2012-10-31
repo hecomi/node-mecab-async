@@ -32,7 +32,8 @@ public:
 		Local<FunctionTemplate> clazz = FunctionTemplate::New(MeCab_parser::New);
 		clazz->SetClassName( String::NewSymbol("MeCab") );
 		clazz->InstanceTemplate()->SetInternalFieldCount(1);
-		NODE_SET_PROTOTYPE_METHOD(clazz, "parse", MeCab_parser::Parse);
+		NODE_SET_PROTOTYPE_METHOD(clazz, "parse",     MeCab_parser::Parse);
+		NODE_SET_PROTOTYPE_METHOD(clazz, "parseSync", MeCab_parser::ParseSync);
 		target->Set( String::NewSymbol("MeCab"), clazz->GetFunction() );
 	};
 
@@ -60,13 +61,20 @@ private:
 		return scope.Close( args.This() );
 	};
 
-	// JavaScript の世界で parse したら呼ばれる
+	// JavaScript の世界で parse したら呼ばれる（非同期版）
 	static Handle<Value> Parse(const Arguments& args)
 	{
 		HandleScope scope;
 
-		// 非同期処理に必要なデータの成形
+		// 引数が文字列かどうかチェック
+		if (!args[0]->IsString()) {
+			Local<String> msg = String::New("[MeCab] Error! The 1st argument of 'parse' must be String.");
+			ThrowException(Exception::TypeError(msg));
+			return scope.Close(Undefined());
+		}
 		String::Utf8Value str(args[0]);
+
+		// 非同期処理に必要なデータの成形
 		auto data      = new MeCab_baton;
 		data->str      = *str;
 		data->_this    = ObjectWrap::Unwrap<MeCab_parser>( args.This() );
@@ -150,6 +158,71 @@ private:
 		);
 
 		return scope.Close( Undefined() );
+	};
+
+	// JavaScript の世界で parse したら呼ばれる（同期版）
+	static Handle<Value> ParseSync(const Arguments& args)
+	{
+		HandleScope scope;
+		auto _this = ObjectWrap::Unwrap<MeCab_parser>( args.This() );
+
+		// 引数が文字列かどうかチェック
+		if (!args[0]->IsString()) {
+			Local<String> msg = String::New("[MeCab] Error! The 1st argument of 'parseSync' must be String.");
+			ThrowException(Exception::TypeError(msg));
+			return scope.Close(Undefined());
+		}
+		String::Utf8Value str(args[0]);
+
+		// tagger のチェック
+		auto tagger = _this->getTagger();
+		if (!tagger) {
+			string err = MeCab::getTaggerError();
+			Local<String> msg = String::New( ("[MeCab] Error!: " + err).c_str() );
+			ThrowException( Exception::TypeError(msg) );
+			return scope.Close( Undefined() );
+		}
+
+		// パース結果のチェック
+		auto node = tagger->parseToNode(*str);
+		if (!node) {
+			string err = tagger->what();
+			Local<String> msg = String::New( ("[MeCab] Error!: " + err).c_str() );
+			ThrowException( Exception::TypeError(msg) );
+			return scope.Close( Undefined() );
+		}
+
+		// 解析結果を配列に格納
+		vector<vector<string>> result_vec;
+		for (node = node->next; node->next; node = node->next) {
+			// 形態素の文字列をまず格納
+			vector<string> node_result_vec;
+			node_result_vec.push_back( string(node->surface, node->length) );
+
+			// パース結果を ',' で分割
+			string feature( node->feature );
+			boost::char_separator<char> sep(",");
+			boost::tokenizer<boost::char_separator<char>> tok(feature, sep);
+			for (const auto& str : tok) {
+				node_result_vec.push_back(str);
+			}
+
+			result_vec.push_back(node_result_vec);
+		}
+
+		// 結果を v8::Array に整形
+		auto result_arr = Array::New( result_vec.size() );
+		int i = 0;
+		for (const auto& node_result_vec : result_vec) {
+			int j = 0;
+			auto node_result_arr = Array::New( node_result_vec.size() );
+			for (const auto& str : node_result_vec) {
+				node_result_arr->Set( Number::New( j++ ), String::New( str.c_str() ) );
+			}
+			result_arr->Set( Number::New( i++ ), node_result_arr );
+		}
+
+		return scope.Close( result_arr );
 	};
 
 	// tagger
