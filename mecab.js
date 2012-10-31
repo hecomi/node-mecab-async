@@ -22,4 +22,13 @@ MeCab.prototype.wakachi = function(str, callback) {
 	});
 };
 
+MeCab.prototype.wakachiSync = function(str) {
+	var result = this.parseSync(str)
+	  , ret = [];
+	for (var i in result) {
+		ret.push(result[i][0]);
+	}
+	return ret;
+};
+
 module.exports = MeCab;
