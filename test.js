@@ -1,4 +1,4 @@
-var MeCab = new require('mecab-async')
+var MeCab = new require('./mecab.js')
   , mecab = new MeCab()
 ;
 
