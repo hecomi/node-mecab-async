@@ -1,5 +1,5 @@
 var exec     = require('child_process').exec;
-var execSync = require('exec-sync');
+var execSync = require('execSync');
 
 // 後方互換のため
 var MeCab = function() {};
