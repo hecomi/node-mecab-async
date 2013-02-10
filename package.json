@@ -7,7 +7,7 @@
   },
   "main": "mecab",
   "dependencies": {
-  	"exec-sync" : "*"
+  	"execSync" : "*"
   },
   "readmeFilename": "README.md",
   "description": "Asynchronous japanese morphological analyzer using MeCab.",
