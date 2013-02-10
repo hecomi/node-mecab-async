@@ -1,16 +1,14 @@
-var MeCab = new require('./mecab.js')
-  , mecab = new MeCab()
-;
+var MeCab = new require('./mecab.js');
 
 // 非同期版
-mecab.parse('すもももももももものうち', function(err, result) {
+MeCab.parse('すもももももももものうち', function(err, result) {
 	if (err) throw err;
 	console.log('非同期:')
 	console.log(result);
 });
 
 // 非同期版
-mecab.wakachi('すもももももももものうち', function(err, result) {
+MeCab.wakachi('すもももももももものうち', function(err, result) {
 	if (err) throw err;
 	console.log('非同期:')
 	console.log(result);
@@ -18,8 +16,8 @@ mecab.wakachi('すもももももももものうち', function(err, result) {
 
 // 同期版
 console.log('同期:')
-console.log( mecab.parseSync('すもももももももものうち') );
+console.log( MeCab.parseSync('すもももももももものうち') );
 
 // 同期版
 console.log('同期:')
-console.log( mecab.wakachiSync('すもももももももものうち') );
+console.log( MeCab.wakachiSync('すもももももももものうち') );

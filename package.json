@@ -6,7 +6,9 @@
     "email": "info@hecomi.com"
   },
   "main": "mecab",
-  "dependencies": {},
+  "dependencies": {
+  	"exec-sync" : "*"
+  },
   "readmeFilename": "README.md",
   "description": "Asynchronous japanese morphological analyzer using MeCab.",
   "repository": {
@@ -17,10 +19,6 @@
     "mail": "info@hecomi.com",
     "url": "http://github.com/hecomi/node-mecab-async/issues"
   },
-  "scripts": {
-    "install": "node-gyp rebuild"
-  },
-  "gypfile": true,
   "readme": "Asynchronous japanese morphological analyser using MeCab\r\n=============\r\n\r\nこれは何？\r\n--------------\r\n非同期で MeCab で結果をパースする Node.js 用モジュールです。\r\n\r\nインストール\r\n--------------\r\n\t$ npm install mecab-async\r\n\r\n使い方\r\n--------------\r\n以下のようにコールバック経由で解析結果を取得します。\r\n\r\n```javascript\r\n\tvar MeCab = new require('mecab-async')\r\n\t  , mecab = new MeCab()\r\n\t;\r\n\tmecab.parse('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {\r\n\t\tif (err) throw err;\r\n\t\tconsole.log(result);\r\n\t});\r\n```\r\n\r\n結果：\r\n\r\n\t[ [ 'いつも', '副詞', '一般', '*', '*', '*', '*', 'いつも', 'イツモ', 'イツモ' ],\r\n\t  [ 'ニコニコ', '副詞', '助詞類接続', '*', '*', '*', '*', 'ニコニコ', 'ニコニコ', 'ニコニコ' ],\r\n\t  [ 'あなた', '名詞', '代名詞', '一般', '*', '*', '*', 'あなた', 'アナタ', 'アナタ' ],\r\n\t  [ 'の', '助詞', '連体化', '*', '*', '*', '*', 'の', 'ノ', 'ノ' ],\r\n\t  [ '隣', '名詞', '一般', '*', '*', '*', '*', '隣', 'トナリ', 'トナリ' ],\r\n\t  [ 'に', '助詞', '格助詞', '一般', '*', '*', '*', 'に', 'ニ', 'ニ' ],\r\n\t  [ '這い', '動詞', '自立', '*', '*', '五段・ワ行促音便', '連用形', '這う', 'ハイ', 'ハイ' ],\r\n\t  [ '寄る', '動詞', '自立', '*', '*', '五段・ラ行', '基本形', '寄る', 'ヨル', 'ヨル' ],\r\n\t  [ '混沌', '名詞', '一般', '*', '*', '*', '*', '混沌', 'コントン', 'コントン' ],\r\n\t  [ 'ニャルラトホテプ', '名詞', '一般', '*', '*', '*', '*', '*' ],\r\n\t  [ 'です', '助動詞', '*', '*', '*', '特殊・デス', '基本形', 'です', 'デス', 'デス' ],\r\n\t  [ '！', '記号', '一般', '*', '*', '*', '*', '！', '！', '！' ] ]\r\n\r\nわかち書きもできます。\r\n\r\n```javascript\r\n\tvar MeCab = new require('mecab-async')\r\n\t  , mecab = new MeCab()\r\n\t;\r\n\tmecab.wakachi('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {\r\n\t\tif (err) throw err;\r\n\t\tconsole.log(result);\r\n\t});\r\n```\r\n\r\n結果：\r\n\r\n\t[ 'いつも',\r\n\t  'ニコニコ',\r\n\t  'あなた',\r\n\t  'の',\r\n\t  '隣',\r\n\t  'に',\r\n\t  '這い',\r\n\t  '寄る',\r\n\t  '混沌',\r\n\t  'ニャルラトホテプ',\r\n\t  'です',\r\n\t  '！' ]\r\n\r\n詳細\r\n--------------\r\nその他詳細は Twitter:@hecomi へご質問いただくか、http://d.hatena.ne.jp/hecomi/ をご参照下さい。\r\n",
   "_id": "mecab-async@0.0.3",
   "_from": "mecab-async"
