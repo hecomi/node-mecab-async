@@ -9,7 +9,7 @@ MeCab.prototype = {
 		result.split('\n').forEach(function(line) {
 			ret.push(line.replace('\t', ',').split(','));
 		});
-		return ret.slice(0, -2); // for EOS and empty line
+		return ret;
 	},
 	parse : function(str, callback) {
 		exec('echo ' + str + ' | mecab', function(err, result) {
@@ -17,12 +17,12 @@ MeCab.prototype = {
 				callback(err, null);
 				return;
 			}
-			callback(null, MeCab._parseMeCabResult(result));
+			callback(null, MeCab._parseMeCabResult(result).slice(0,-2));
 		});
 	},
 	parseSync : function(str) {
 		var result = execSync('echo ' + str + ' | mecab');
-		return MeCab._parseMeCabResult(result);
+		return MeCab._parseMeCabResult(result).slice(0,-1);
 	},
 	_wakatsu : function(arr) {
 		var ret = [];
