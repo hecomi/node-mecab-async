@@ -87,7 +87,7 @@ private:
 			uv_default_loop(),
 			req,
 			MeCab_parser::AsyncWork,
-			MeCab_parser::AsyncAfter
+			(uv_after_work_cb)MeCab_parser::AsyncAfter
 		);
 
 		return scope.Close( Undefined() );
