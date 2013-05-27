@@ -166,6 +166,9 @@ private:
 
 		Local<Value> argv[2] = { String::New(""), result_arr };
 		callback->Call(Context::GetCurrent()->Global(), 2, argv);
+
+		callback.Dispose();
+		callback.Clear();
 	}
 
 	// JavaScript の世界で parse したら呼ばれる（同期版）
