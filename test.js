@@ -1,5 +1,5 @@
 var MeCab = new require('./mecab.js');
-var testWord = '動作テスト';
+var testWord = 'すもももももももものうち';
 
 // 非同期版
 MeCab.parse(testWord, function(err, result) {
@@ -14,3 +14,12 @@ MeCab.wakachi(testWord, function(err, result) {
 	console.log('非同期:');
 	console.log(result);
 });
+
+// 同期版
+console.log('同期:');
+console.log( MeCab.parseSync(testWord) );
+
+// 同期版
+console.log('同期:');
+console.log( MeCab.wakachiSync(testWord) );
+

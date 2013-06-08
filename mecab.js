@@ -1,7 +1,9 @@
 var exec     = require('child_process').exec;
+var execSync = require('execsync');
 
 // 後方互換のため
 var MeCab = function() {};
+
 MeCab.prototype = {
 	_parseMeCabResult : function(result) {
 		var ret = [];
@@ -19,6 +21,10 @@ MeCab.prototype = {
 			callback(null, MeCab._parseMeCabResult(result).slice(0,-2));
 		});
 	},
+	parseSync : function(str) {
+		var result = execSync('echo ' + str + ' | mecab');
+		return MeCab._parseMeCabResult(result).slice(0,-2);
+	},
 	_wakatsu : function(arr) {
 		var ret = [];
 		for (var i in arr) {
@@ -35,6 +41,10 @@ MeCab.prototype = {
 			var ret = [];
 			callback(null, MeCab._wakatsu(arr));
 		});
+	},
+	wakachiSync : function(str) {
+		var arr = MeCab.parseSync(str);
+		return MeCab._wakatsu(arr);
 	}
 };
 
