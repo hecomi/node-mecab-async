@@ -1,7 +1,7 @@
 var exec     = require('child_process').exec;
 var execSync = require('execsync');
 
-// 後方互換のため
+// for backward compatibility
 var MeCab = function() {};
 
 MeCab.prototype = {
@@ -22,6 +22,7 @@ MeCab.prototype = {
 		});
 	},
 	parseSync : function(str) {
+		execSync(''); // for bug
 		var result = execSync('echo ' + str + ' | mecab');
 		return MeCab._parseMeCabResult(result).slice(0,-2);
 	},
@@ -38,12 +39,12 @@ MeCab.prototype = {
 				callback(err, null);
 				return;
 			}
-			var ret = [];
 			callback(null, MeCab._wakatsu(arr));
 		});
 	},
 	wakachiSync : function(str) {
 		var arr = MeCab.parseSync(str);
+		console.log(arr);
 		return MeCab._wakatsu(arr);
 	}
 };
