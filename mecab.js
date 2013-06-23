@@ -1,34 +1,55 @@
-var fs   = require('fs')
-  , path = require('path')
-  , MeCab
-;
+var exec     = require('child_process').exec;
+var execSync = require('execsync');
 
-if ( fs.existsSync( path.join(__dirname, './build/Debug') ) ) {
-	MeCab = require('./build/Debug/mecab').MeCab;
-} else if ( fs.existsSync( path.join(__dirname, './build/Release') ) ) {
-	MeCab = require('./build/Release/mecab').MeCab;
-} else {
-	throw '"mecab-async" has not been compiled yet.'
-}
+// 後方互換のため
+var MeCab = function() {};
 
-MeCab.prototype.wakachi = function(str, callback) {
-	this.parse(str, function(err, result) {
-		if (err) callback(err, null);
+MeCab.prototype = {
+	_parseMeCabResult : function(result) {
 		var ret = [];
-		for (var i in result) {
-			ret.push(result[i][0]);
+		result.split('\n').forEach(function(line) {
+			ret.push(line.replace('\t', ',').split(','));
+		});
+		return ret;
+	},
+	parse : function(str, callback) {
+		exec('echo ' + str + ' | mecab', function(err, result) {
+			if (err) {
+				callback(err, null);
+				return;
+			}
+			callback(null, MeCab._parseMeCabResult(result).slice(0,-2));
+		});
+	},
+	parseSync : function(str) {
+		var result = execSync('echo ' + str + ' | mecab');
+		return MeCab._parseMeCabResult(result).slice(0,-2);
+	},
+	_wakatsu : function(arr) {
+		var ret = [];
+		for (var i in arr) {
+			ret.push(arr[i][0]);
 		}
-		callback(null, ret);
-	});
+		return ret;
+	},
+	wakachi : function(str, callback) {
+		MeCab.parse(str, function(err, arr) {
+			if (err) {
+				callback(err, null);
+				return;
+			}
+			var ret = [];
+			callback(null, MeCab._wakatsu(arr));
+		});
+	},
+	wakachiSync : function(str) {
+		var arr = MeCab.parseSync(str);
+		return MeCab._wakatsu(arr);
+	}
 };
 
-MeCab.prototype.wakachiSync = function(str) {
-	var result = this.parseSync(str)
-	  , ret = [];
-	for (var i in result) {
-		ret.push(result[i][0]);
-	}
-	return ret;
-};
+for (var x in MeCab.prototype) {
+	MeCab[x] = MeCab.prototype[x];
+}
 
 module.exports = MeCab;
