@@ -35,8 +35,7 @@ MeCab.prototype = {
 		return ret;
 	},
 	parse : function(str, callback) {
-		exec('', function(err) { // for bug
-			if (err) { return callback(err); }
+		process.nextTick(function() {
 			exec('echo "' + str + '" | mecab', function(err, result) {
 				if (err) { return callback(err); }
 				callback(err, MeCab._parseMeCabResult(result).slice(0,-2));
@@ -44,7 +43,6 @@ MeCab.prototype = {
 		});
 	},
 	parseSync : function(str) {
-		execSync(''); // for bug
 		var result = execSync('echo ' + str + ' | mecab');
 		return MeCab._parseMeCabResult(result).slice(0, -2);
 	},
