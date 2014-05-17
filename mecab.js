@@ -28,14 +28,12 @@ MeCab.prototype = {
 		return result;
 	},
 	_parseMeCabResult : function(result) {
-		var ret = [];
-		result.split('\n').forEach(function(line) {
-			ret.push(line.replace('\t', ',').split(','));
+		return result.split('\n').map(function(line) {
+			return line.replace('\t', ',').split(',');
 		});
-		return ret;
 	},
 	parse : function(str, callback) {
-		process.nextTick(function() {
+		process.nextTick(function() { // for bug
 			exec('echo "' + str + '" | mecab', function(err, result) {
 				if (err) { return callback(err); }
 				callback(err, MeCab._parseMeCabResult(result).slice(0,-2));
@@ -56,24 +54,16 @@ MeCab.prototype = {
 		return MeCab._format(MeCab.parseSync(str));
 	},
 	_wakatsu : function(arr) {
-		var ret = [];
-		for (var i in arr) {
-			ret.push(arr[i][0]);
-		}
-		return ret;
+		return arr.map(function(data) { return data[0]; });
 	},
 	wakachi : function(str, callback) {
 		MeCab.parse(str, function(err, arr) {
-			if (err) {
-				callback(err, null);
-				return;
-			}
+			if (err) { return callback(err); }
 			callback(null, MeCab._wakatsu(arr));
 		});
 	},
 	wakachiSync : function(str) {
 		var arr = MeCab.parseSync(str);
-		console.log(arr);
 		return MeCab._wakatsu(arr);
 	}
 };
