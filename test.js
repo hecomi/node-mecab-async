@@ -1,4 +1,5 @@
 var MeCab = new require('./mecab.js');
+MeCab.command = 'mecab -E "<改行>\\n"';  // 例えばEOSを <改行> と表示する
 
 runAllFeatures('すもももももももものうち');
 
