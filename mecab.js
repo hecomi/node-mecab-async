@@ -1,5 +1,6 @@
 var exec     = require('child_process').exec;
 var execSync = require('execsync');
+var sq       = require('shell-quote');
 
 // for backward compatibility
 var MeCab = function() {};
@@ -27,6 +28,9 @@ MeCab.prototype = {
 		});
 		return result;
 	},
+    _shellCommand : function(str) {
+        return sq.quote(['echo', str]) + ' | mecab';
+    },
 	_parseMeCabResult : function(result) {
 		return result.split('\n').map(function(line) {
 			return line.replace('\t', ',').split(',');
@@ -34,14 +38,14 @@ MeCab.prototype = {
 	},
 	parse : function(str, callback) {
 		process.nextTick(function() { // for bug
-			exec('echo "' + str + '" | mecab', function(err, result) {
+			exec(MeCab._shellCommand(str), function(err, result) {
 				if (err) { return callback(err); }
 				callback(err, MeCab._parseMeCabResult(result).slice(0,-2));
 			});
 		});
 	},
 	parseSync : function(str) {
-		var result = execSync('echo ' + str + ' | mecab');
+		var result = execSync(MeCab._shellCommand(str));
 		return MeCab._parseMeCabResult(result).slice(0, -2);
 	},
 	parseFormat : function(str, callback) {
