@@ -67,6 +67,16 @@ Asynchronous japanese morphological analyser using MeCab
 
 同期版として parseSync および wakachiSync を使用することもできます。
 
+実行される `mecab` コマンドのパスを明示的に指定したかったり、より詳細なオプションを指定したかったりする場合、
+シェルコマンドをカスタマイズして使うこともできます。
+
+```javascript
+	var MeCab = new require('mecab-async')
+	  , mecab = new MeCab()
+	;
+	mecab.command = '/usr/local/bin/mecab -E "<改行>\\n"';   // EOSを <改行> と表示
+```
+
 詳細
 --------------
 その他詳細は Twitter:@hecomi へご質問いただくか、http://d.hatena.ne.jp/hecomi/ をご参照下さい。

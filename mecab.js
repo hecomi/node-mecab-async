@@ -6,6 +6,7 @@ var sq       = require('shell-quote');
 var MeCab = function() {};
 
 MeCab.prototype = {
+    command : 'mecab',
 	_format: function(arrayResult) {
 		var result = [];
 		if (!arrayResult) { return result; }
@@ -29,7 +30,7 @@ MeCab.prototype = {
 		return result;
 	},
     _shellCommand : function(str) {
-        return sq.quote(['echo', str]) + ' | mecab';
+        return sq.quote(['echo', str]) + ' | ' + this.command;
     },
 	_parseMeCabResult : function(result) {
 		return result.split('\n').map(function(line) {
