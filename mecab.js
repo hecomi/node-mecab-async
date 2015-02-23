@@ -1,5 +1,5 @@
 var exec     = require('child_process').exec;
-var execSync = require('execsync');
+var execSync = require('sync-exec');
 var sq       = require('shell-quote');
 
 // for backward compatibility
