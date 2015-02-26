@@ -7,7 +7,6 @@
   },
   "main": "mecab",
   "dependencies": {
-    "execsync": "*",
     "shell-quote": "*"
   },
   "readmeFilename": "README.md",
