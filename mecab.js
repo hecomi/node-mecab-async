@@ -1,5 +1,5 @@
 var exec     = require('child_process').exec;
-var execSync = require('execsync');
+var execSync = require('child_process').execSync;
 var sq       = require('shell-quote');
 
 // for backward compatibility
@@ -47,7 +47,7 @@ MeCab.prototype = {
     },
     parseSync : function(str) {
         var result = execSync(MeCab._shellCommand(str));
-        return MeCab._parseMeCabResult(result).slice(0, -2);
+        return MeCab._parseMeCabResult(String(result)).slice(0, -2);
     },
     parseFormat : function(str, callback) {
         MeCab.parse(str, function(err, result) {
