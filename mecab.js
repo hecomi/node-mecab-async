@@ -34,7 +34,12 @@ MeCab.prototype = {
     },
     _parseMeCabResult : function(result) {
         return result.split('\n').map(function(line) {
-            return line.replace('\t', ',').split(',');
+            var arr = line.split('\t');
+            // EOS
+            if (arr.length === 1) {
+                return [line];
+            }
+            return [arr[0]].concat(arr[1].split(','));
         });
     },
     parse : function(str, callback) {
