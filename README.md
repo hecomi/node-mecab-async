@@ -14,13 +14,13 @@ Asynchronous japanese morphological analyser using MeCab
 以下のようにコールバック経由で解析結果を取得します。
 
 ```javascript
-	var MeCab = new require('mecab-async')
-	  , mecab = new MeCab()
-	;
-	mecab.parse('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
+var MeCab = new require('mecab-async')
+  , mecab = new MeCab()
+;
+mecab.parse('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {
+    if (err) throw err;
+    console.log(result);
+});
 ```
 
 結果：
@@ -41,13 +41,13 @@ Asynchronous japanese morphological analyser using MeCab
 わかち書きもできます。
 
 ```javascript
-	var MeCab = new require('mecab-async')
-	  , mecab = new MeCab()
-	;
-	mecab.wakachi('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
+var MeCab = new require('mecab-async')
+  , mecab = new MeCab()
+;
+mecab.wakachi('いつもニコニコあなたの隣に這い寄る混沌ニャルラトホテプです！', function(err, result) {
+    if (err) throw err;
+    console.log(result);
+});
 ```
 
 結果：
@@ -65,16 +65,33 @@ Asynchronous japanese morphological analyser using MeCab
 	  'です',
 	  '！' ]
 
-同期版として parseSync および wakachiSync を使用することもできます。
+同期版として `parseSync` および `wakachiSync` を使用することもできます。
 
+その他
+--------------
+
+### コマンドの変更
 実行される `mecab` コマンドのパスを明示的に指定したかったり、より詳細なオプションを指定したかったりする場合、
 シェルコマンドをカスタマイズして使うこともできます。
 
 ```javascript
-	var MeCab = new require('mecab-async')
-	  , mecab = new MeCab()
-	;
-	mecab.command = '/usr/local/bin/mecab -E "<改行>\\n"';   // EOSを <改行> と表示
+var MeCab = new require('mecab-async')
+  , mecab = new MeCab()
+;
+mecab.command = '/usr/local/bin/mecab -E "<改行>\\n"';   // EOSを <改行> と表示
+```
+
+### オプション
+`exec` コマンドの与えるオプションを以下のように指定できます。
+
+```javascript
+var MeCab = new require('mecab-async')
+  , mecab = new MeCab()
+;
+MeCab.options = {
+    maxBuffer: 300 * 1024,
+    timeout: 1000
+};
 ```
 
 詳細

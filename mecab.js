@@ -7,7 +7,8 @@ var MeCab = function() {};
 
 MeCab.prototype = {
     command : 'mecab',
-    _format: function(arrayResult) {
+    options : {},
+    _format : function(arrayResult) {
         var result = [];
         if (!arrayResult) { return result; }
         // Reference: http://mecab.googlecode.com/svn/trunk/mecab/doc/index.html
@@ -44,14 +45,14 @@ MeCab.prototype = {
     },
     parse : function(str, callback) {
         process.nextTick(function() { // for bug
-            exec(MeCab._shellCommand(str), function(err, result) {
+            exec(MeCab._shellCommand(str), this.options, function(err, result) {
                 if (err) { return callback(err); }
                 callback(err, MeCab._parseMeCabResult(result).slice(0,-2));
             });
         });
     },
     parseSync : function(str) {
-        var result = execSync(MeCab._shellCommand(str));
+        var result = execSync(MeCab._shellCommand(str), this.options);
         return MeCab._parseMeCabResult(String(result)).slice(0, -2);
     },
     parseFormat : function(str, callback) {
