@@ -8,27 +8,28 @@ var MeCab = function() {};
 MeCab.prototype = {
     command : 'mecab',
     options : {},
-    _format : function(arrayResult) {
-        const result = [];
-        if (!arrayResult) { return result; }
-        // Reference: http://mecab.googlecode.com/svn/trunk/mecab/doc/index.html
+    parser: data => (data.length <= 8) ? null : {
+        // Ref: http://mecab.googlecode.com/svn/trunk/mecab/doc/index.html
         // 表層形\t品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-        arrayResult.forEach(parsed => {
-            if (parsed.length <= 8) { return; }
-            result.push({
-                kanji         : parsed[0],
-                lexical       : parsed[1],
-                compound      : parsed[2],
-                compound2     : parsed[3],
-                compound3     : parsed[4],
-                conjugation   : parsed[5],
-                inflection    : parsed[6],
-                original      : parsed[7],
-                reading       : parsed[8],
-                pronunciation : parsed[9] || ''
-            });
+        kanji         : data[0],
+        lexical       : data[1],
+        compound      : data[2],
+        compound2     : data[3],
+        compound3     : data[4],
+        conjugation   : data[5],
+        inflection    : data[6],
+        original      : data[7],
+        reading       : data[8],
+        pronunciation : data[9] || ''
+    },
+    _format : function(arr) {
+        const results = [];
+        if (!arr) { return results; }
+        arr.forEach(data => {
+            var result = this.parser(data);
+            if (result) { results.push(result); }
         });
-        return result;
+        return results;
     },
     _shellCommand : function(str) {
         return sq.quote(['echo', str]) + ' | ' + this.command;
@@ -45,37 +46,37 @@ MeCab.prototype = {
     },
     parse : function(str, callback) {
         process.nextTick(() => { // for bug
-            exec(MeCab._shellCommand(str), this.options, (err, result) => {
+            exec(this._shellCommand(str), this.options, (err, result) => {
                 if (err) { return callback(err); }
-                callback(err, MeCab._parseMeCabResult(result).slice(0,-2));
+                callback(err, this._parseMeCabResult(result).slice(0, -2));
             });
         });
     },
     parseSync : function(str) {
-        const result = execSync(MeCab._shellCommand(str), this.options);
-        return MeCab._parseMeCabResult(String(result)).slice(0, -2);
+        const result = execSync(this._shellCommand(str), this.options);
+        return this._parseMeCabResult(String(result)).slice(0, -2);
     },
     parseFormat : function(str, callback) {
-        MeCab.parse(str, (err, result) => {
+        this.parse(str, (err, result) => {
             if (err) { return callback(err); }
-            callback(err, MeCab._format(result));
+            callback(err, this._format(result));
         });
     },
     parseSyncFormat : function(str) {
-        return MeCab._format(MeCab.parseSync(str));
+        return this._format(this.parseSync(str));
     },
     _wakatsu : function(arr) {
         return arr.map(data => data[0]);
     },
     wakachi : function(str, callback) {
-        MeCab.parse(str, (err, arr) => {
+        this.parse(str, (err, arr) => {
             if (err) { return callback(err); }
-            callback(null, MeCab._wakatsu(arr));
+            callback(null, this._wakatsu(arr));
         });
     },
     wakachiSync : function(str) {
-        const arr = MeCab.parseSync(str);
-        return MeCab._wakatsu(arr);
+        const arr = this.parseSync(str);
+        return this._wakatsu(arr);
     }
 };
 
