@@ -88,12 +88,29 @@ mecab.command = '/usr/local/bin/mecab -E "<改行>\\n"';   // EOSを <改行> �
 var MeCab = new require('mecab-async')
   , mecab = new MeCab()
 ;
-MeCab.options = {
+mecab.options = {
     maxBuffer: 300 * 1024,
     timeout: 1000
 };
 ```
 
-詳細
---------------
-その他詳細は Twitter:@hecomi へご質問いただくか、http://d.hatena.ne.jp/hecomi/ をご参照下さい。
+### パーサ
+辞書によって結果が異なる場合は`parseFormat`および`parseSyncFormat`で使用されるパーサをカスタマイズできます。
+
+```javascript
+var MeCab = new require('mecab-async')
+  , mecab = new MeCab()
+;
+mecab.parser = data => {
+    kanji         : data[0],
+    lexical       : data[1],
+    compound      : data[2],
+    compound2     : data[3],
+    compound3     : data[4],
+    conjugation   : data[5],
+    inflection    : data[6],
+    original      : data[7],
+    reading       : data[8],
+    pronunciation : data[9] || ''
+};
+```
