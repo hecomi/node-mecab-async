@@ -6,6 +6,7 @@
     "email": "info@hecomi.com"
   },
   "main": "mecab",
+  "types": "mecab.d.ts",
   "dependencies": {
     "shell-quote": "*"
   },
